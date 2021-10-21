@@ -4,16 +4,18 @@ import './buttonAuth.scss';
 
 interface IButtonAuthProps {
   buttonText: string
+  disabled: boolean
 }
 
-export const ButtonAuth: FC<IButtonAuthProps> = ({ buttonText }): JSX.Element => {
+export const ButtonAuth: FC<IButtonAuthProps> = ({ buttonText, disabled }): JSX.Element => {
   return (
     <button
       type='submit'
-      className='auth__submit'
-      // disabled={ !isValidFieldRegister && !isValidFieldLogin }
+      className={ cn('auth__submit', {
+        'auth__submit_disabled': disabled
+      })}
+      disabled={ disabled }
     >
-      {/* { isLoadig ? `${buttonText}...` : buttonText } */}
       { buttonText }
     </button>
   );

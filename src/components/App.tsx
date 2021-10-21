@@ -1,26 +1,52 @@
-import { FC } from 'react';
+import { useState, FC  } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import './App.css';
 
 // Компоненты
 import Login from './login/Login'
-import { Profile } from './profile'
+import Profile from './profile/Profile'
+
+// HOC
+import { ProtectedRoute } from './HOC/ProtectedRoute';
 
 interface IStateProps {
   login: string,
-  password: number
+  password: string
 }
 
-const App: FC = (): JSX.Element => {
+const App: FC<IStateProps> = ({ login, password }): JSX.Element => {
+  const [ loginValue, setLoginValue ] = useState<string>('');
+  const [ passwordValue, setPasswordValue ] = useState<string>('');
+
+  const cbLogin = (value: string) => {
+    setLoginValue(value);
+  };
+
+  const cbPassword = (value: string) => {
+    setPasswordValue(value);
+  };
+
   return (
     <Switch>
       <Route exact path='/'>
-        <Login />
+        <Login 
+          loginValue={ loginValue } 
+          passwordValue={ passwordValue }
+          cbPassword={ cbPassword }
+          cbLogin={ cbLogin }
+        />
       </Route>
-      <Route exact path='/profile'>
+
+      <ProtectedRoute 
+        path={ '/profile' } 
+        loginValue={ loginValue } 
+        passwordValue={ passwordValue }
+        login={ login } 
+        password={ password }
+      >
         <Profile />
-      </Route>
+      </ProtectedRoute>
     </Switch>
   );
 }

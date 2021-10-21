@@ -1,42 +1,57 @@
 import React, { FC } from 'react';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import './login.scss';
 
 import { ButtonAuth } from '../ui/button-auth';
 import { InputAuth } from '../ui/input-auth';
 
-interface IStateProps {
+// state
+import IStateProps from '../../redux/IStateProps';
+
+interface ILoginProps {
+  loginValue: string
+  passwordValue: string
+  cbPassword: (value: string) => void
+  cbLogin: (value: string) => void
   login: string,
   password: number
 }
 
-const Login: FC<IStateProps> = ({ login, password }):JSX.Element => {
-  console.log(login, password)
+const Login: FC<ILoginProps> = ( props ):JSX.Element => {
+  const history = useHistory();
+
+  const { loginValue, passwordValue, cbPassword, cbLogin, login, password } = props;
+
+  const handlerForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/profile`);
+  };
+  
   return (
     <main className='login login__margin-center'>
         <form
           className='auth__form login__form'
           name='login'
-          /* onSubmit={ submitForm } */
+          onSubmit={ handlerForm }
         >
           <InputAuth
             textDesc={ 'Логин' }
             nameField={ 'login' }
             typeField={ 'text' }
-            /* authValue={ authValueEmail }
-            setAuthValue={ setAuthValueEmail } */
+            value={ loginValue }
+            cb={ cbLogin }
           />
           <InputAuth
             textDesc={ 'Пароль' }
             nameField={ 'password' }
             typeField={ 'password' }
-            /* authValue={ authValuePassword }
-            setAuthValue={ setAuthValuePassword } */
+            value={ passwordValue }
+            cb={ cbPassword }
           />
           <ButtonAuth
             buttonText={ 'Войти' }
-            /* isValidFieldLogin={ isValidFieldLogin }
-            isLoadig={ isLoadig } */
+            disabled={ login.toString() === loginValue && password.toString() === passwordValue ? false : true }
           />
         </form>
     </main>
