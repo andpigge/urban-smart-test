@@ -1,6 +1,6 @@
 import { useState, FC  } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
 
 // Компоненты
@@ -47,6 +47,10 @@ const App: FC<IStateProps> = ({ login, password }): JSX.Element => {
       >
         <Profile />
       </ProtectedRoute>
+
+      <Route path='*'>
+        <Redirect to={`/`} />
+      </Route>
     </Switch>
   );
 }
