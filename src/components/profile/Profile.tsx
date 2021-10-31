@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './profile.scss';
 
 // state
-import IStateProps from '../../redux/IStateProps';
+import { IStateProfileProps } from '../../redux/reducers/IStateProps';
 interface IProfileProps {
   login: string,
 }
@@ -16,9 +16,9 @@ const Profile: FC<IProfileProps> = ({ login }):JSX.Element => {
   );
 };
 
-const mapStateToProps = (state: IStateProps) => {
+const mapStateToProps = (state: IStateProfileProps) => {
   return {
-    login: state.login,
+    login: state.login.login,
   };
 };
 

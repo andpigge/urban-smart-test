@@ -7,21 +7,21 @@ import { ButtonAuth } from '../ui/button-auth';
 import { InputAuth } from '../ui/input-auth';
 
 // state
-import IStateProps from '../../redux/IStateProps';
+import { IStateLoginProps } from '../../redux/reducers/IStateProps';
 
 interface ILoginProps {
-  loginValue: string
-  passwordValue: string
-  cbPassword: (value: string) => void
-  cbLogin: (value: string) => void
   login: string,
-  password: number
+  password: string,
+  handlerLogin: (input: string) => void
+  handlerPassword: (input: string) => void
+  userLogin: string
+  userPassword: string
 }
 
 const Login: FC<ILoginProps> = ( props ):JSX.Element => {
   const history = useHistory();
 
-  const { loginValue, passwordValue, cbPassword, cbLogin, login, password } = props;
+  const { login, password, handlerLogin, handlerPassword, userLogin, userPassword } = props;
 
   const handlerForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ const Login: FC<ILoginProps> = ( props ):JSX.Element => {
   return (
     <main className='login login__margin-center'>
         <form
-          className='auth__form login__form'
+          className='login__form'
           name='login'
           onSubmit={ handlerForm }
         >
@@ -39,30 +39,39 @@ const Login: FC<ILoginProps> = ( props ):JSX.Element => {
             textDesc={ 'Логин' }
             nameField={ 'login' }
             typeField={ 'text' }
-            value={ loginValue }
-            cb={ cbLogin }
+            value={ login }
+            cb={ handlerLogin }
           />
           <InputAuth
             textDesc={ 'Пароль' }
             nameField={ 'password' }
             typeField={ 'password' }
-            value={ passwordValue }
-            cb={ cbPassword }
+            value={ password }
+            cb={ handlerPassword }
           />
           <ButtonAuth
             buttonText={ 'Войти' }
-            disabled={ login.toString() === loginValue && password.toString() === passwordValue ? false : true }
+            disabled={ login === userLogin && password === userPassword ? false : true }
           />
         </form>
     </main>
   );
 };
 
-const mapStateToProps = (state: IStateProps) => {
+const mapStateToProps = (state: IStateLoginProps) => {
   return {
-    login: state.login,
-    password: state.password
+    login: state.login.login,
+    password: state.login.password,
+    userLogin: state.user.userLogin,
+    userPassword: state.user.userPassword
   };
 };
 
-export default connect(mapStateToProps)(Login);
+function mapDispatchToProps (dispatch: (arg0: { type: string, value: string }) => any) {
+  return {
+    handlerLogin: (login: string) => dispatch({ type: 'LOGIN', value: login }),
+    handlerPassword: (password: string) => dispatch({ type: 'PASWORD', value: password })
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

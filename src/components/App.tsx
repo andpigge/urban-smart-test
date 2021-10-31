@@ -1,4 +1,4 @@
-import { useState, FC  } from 'react';
+import { FC  } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import './App.css';
@@ -10,40 +10,31 @@ import Profile from './profile/Profile'
 // HOC
 import { ProtectedRoute } from './HOC/ProtectedRoute';
 
-interface IStateProps {
-  login: string,
+// state
+import { IStateAppProps } from '../redux/reducers/IStateProps';
+
+interface IAppProps {
+  login: string
   password: string
+  userLogin: string
+  userPassword: string
 }
 
-const App: FC<IStateProps> = ({ login, password }): JSX.Element => {
-  const [ loginValue, setLoginValue ] = useState<string>('');
-  const [ passwordValue, setPasswordValue ] = useState<string>('');
-
-  const cbLogin = (value: string) => {
-    setLoginValue(value);
-  };
-
-  const cbPassword = (value: string) => {
-    setPasswordValue(value);
-  };
+const App: FC<IAppProps> = (props): JSX.Element => {
+  const { login, password, userLogin, userPassword } = props;
 
   return (
     <Switch>
       <Route exact path='/'>
-        <Login 
-          loginValue={ loginValue } 
-          passwordValue={ passwordValue }
-          cbPassword={ cbPassword }
-          cbLogin={ cbLogin }
-        />
+        <Login />
       </Route>
 
       <ProtectedRoute 
         path={ '/profile' } 
-        loginValue={ loginValue } 
-        passwordValue={ passwordValue }
         login={ login } 
         password={ password }
+        userLogin={ userLogin }
+        userPassword={ userPassword }
       >
         <Profile />
       </ProtectedRoute>
@@ -55,10 +46,12 @@ const App: FC<IStateProps> = ({ login, password }): JSX.Element => {
   );
 }
 
-const mapStateToProps = (state: IStateProps) => {
+const mapStateToProps = (state: IStateAppProps) => {
   return {
-    login: state.login,
-    password: state.password
+    login: state.login.login,
+    password: state.login.password,
+    userLogin: state.user.userLogin,
+    userPassword: state.user.userPassword
   };
 };
 

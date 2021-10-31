@@ -4,17 +4,17 @@ import { Route, Redirect } from 'react-router-dom';
 interface IProtectedRouteProps {
   children: JSX.Element
   path: string
-  loginValue: string
-  passwordValue: string
   login: string
   password: string
+  userLogin: string
+  userPassword: string
 }
 
 export const ProtectedRoute: FC<IProtectedRouteProps> = (props): JSX.Element => {
-  const { children, path, loginValue, passwordValue, login, password } = props;
+  const { children, path, login, password, userLogin, userPassword } = props;
 
   const renderChildren = () => {
-    if (login.toString() === loginValue && password.toString() === passwordValue) {
+    if (login === userLogin && password === userPassword) {
       return (
         children
       );
